@@ -40,8 +40,10 @@ app.post('/', async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error)
-    res.status(500).send(error || 'Something went wrong');
+    // Log details on the server only. Never send the raw error to the browser:
+    // it contains the request config, including the Authorization header (API key).
+    console.error(error.response?.status, error.response?.data || error.message)
+    res.status(500).send({ error: 'Something went wrong. Please try again.' });
   }
 })
 
